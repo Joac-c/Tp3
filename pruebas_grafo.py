@@ -40,5 +40,6 @@ def main():
     print(distancia)
     print("prueba divulgar")
     funciones_grafo.divulgar(grafo, "A", 3)
+    funciones_grafo.comunidades(grafo, 1)
 
 main()

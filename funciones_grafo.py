@@ -185,10 +185,10 @@ def comunidades(grafo, n):
     for v in vertices:
         #para los vertices vamos a armar una lista
         etiquetas[v] = i
-        for e in grafo.obtener_adyasentes(v):
+        for e in grafo.obtener_adyacentes(v):
             entradas[e] = entradas.get(e, {})
             entradas[e][i] = entradas[e].get(i, 0) + 1
-        i = i + 1
+        i += 1
 
     #iteraciones
     completos = False
@@ -196,12 +196,14 @@ def comunidades(grafo, n):
         #Necesito buscar un iterador random
         shuffle(vertices)
         for vertice in vertices:
-            e = obtener_maximo(entradas[vertice])
+
+            if vertice in entradas: e = obtener_maximo(entradas[vertice])
+            else: e = etiquetas[vertice]
             antiguo = etiquetas[vertice]
             etiquetas[vertice] = e
             if antiguo == e: completos = True
             else: completos = False
-            for i in grafo.obtener_adyasentes[v]:
+            for i in grafo.obtener_adyacentes(v):
                 entradas[vertice][antiguo] = entradas[vertice][antiguo] - 1
                 entradas[vertice][i] = entradas[e].get(i, 0) + 1
     
@@ -212,7 +214,8 @@ def comunidades(grafo, n):
         comunidades[etiquetas[v]][1].append(v)
     i = 0
     for c in comunidades:
-        if c[0] >= n: imprimir_comunidad(i, c[1])
+        #print(comunidades[c])
+        if comunidades[c][0] >= n: imprimir_comunidad(i, c[1]) #aca salta un error de suscripcion de int ???
         i = i + 1
 
 
