@@ -1,5 +1,5 @@
 from grafo import Grafo
-from grado import Cola
+from grafo import Cola
 from random import shuffle
 
 """
@@ -138,22 +138,6 @@ def mas_imp(grafo, cant):
 """
 
 
-def persecucion():
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 """Para implementar esto, utilizaremos el algoritmo de Label Propagation para detectar comunidades.
@@ -179,13 +163,13 @@ def obtener_maximo(diccionario):
 
 def imprimir_lista(lista):
     for i in range(0, len(lista) - 2):
-        print("%s, " lista[i])
-    print("%s\n" lista[len(lista) - 1])
+        print("{}, ".format(lista[i]), end='')
+    print(lista[len(lista) - 1])
+    print("\n")
 
 def imprimir_comunidad(numero, lista):
     print("Comunidad %d:", numero)
     imprimir_lista(lista)
-    print("%s\n" lista[len(lista) - 1])
         
 
 def comunidades(grafo, n):
@@ -216,7 +200,7 @@ def comunidades(grafo, n):
             antiguo = etiquetas[vertice]
             etiquetas[vertice] = e
             if antiguo == e: completos = True
-            else completos = False
+            else: completos = False
             for i in grafo.obtener_adyasentes[v]:
                 entradas[vertice][antiguo] = entradas[vertice][antiguo] - 1
                 entradas[vertice][i] = entradas[e].get(i, 0) + 1
@@ -250,38 +234,30 @@ def comunidades(grafo, n):
     36, 79, 84, 38, 71, 48, 13, 76, 77, 20, 64, 72, 57, 23, 7, 24, 85, 61, 47, 19, 25, 40, 37, 52, 56, 74, 66, 1, 18, 27, 26, 80, 62, 97, 86, 15, 53, 31, 78, 99, 81, 6, 29, 11, 33, 45, 51, 65, 87, 42, 50, 93, 41, 90, 4, 70, 92, 67, 95, 0, 82, 63, 60, 5, 9, 68, 59, 89, 34, 8, 14, 73, 28, 16, 49, 43, 83, 75, 39, 21, 32, 54, 55, 17, 91, 46
     36, 79, 84
 
-""""
+"""
 
-def imprimir_visitados(visitados):
-    for i in range(0, len(visitados) - 2):
+
 
 
 
 def divulgar(grafo, delincuente, n):
-        cola = Queue()
+        cola = Cola()
         visitados = set({})
         distancias = {}
         visitados.add(delincuente)
         distancias[delincuente] = 0
-        cola.put(delincuente)
+        cola.encolar(delincuente)
 
-        while not cola.empty():
-            vertice = cola.get()
-            if distancias[vertice] < n:
-                for i in self.vertices[vertice]:
-                    if not i in visitados:
-                        visitados.add(i)
-                        distancias[i] = distancias[vertice] + 1
-                        if distancias[i] < n: cola.put(i)
+        while not cola.esta_vacia():
+            vertice = cola.desencolar()
+            for i in grafo.obtener_adyacentes(vertice):
+                if not i in visitados:
+                    visitados.add(i)
+                    distancias[i] = distancias[vertice] + 1
+                    if distancias[i] < n: cola.encolar(i)
         imprimir_lista(list(visitados))
     
     
-
-            
-
-    
-
-
 
 """
 Ciclo de largo n
@@ -308,6 +284,8 @@ Ciclo de largo n
 
 
 
+
+
 """
 Componentes Fuertemente Conexas
 
@@ -328,47 +306,47 @@ Componentes Fuertemente Conexas
 ENTRANTE = 1
 SALIENTE = 0
 
-    def devolver_aristas(grafo, vertice, direccion):
-        if ENTRANTE == direccion:
-            return grafo.obtener_vertices_entrada(vertice)
-        if SALIENTE == direccion:
-            return grafo.obtener_adyacentes(v)
+def devolver_aristas(grafo, vertice, direccion):
+    if ENTRANTE == direccion:
+        return grafo.obtener_vertices_entrada(vertice)
+    if SALIENTE == direccion:
+        return grafo.obtener_adyacentes(v)
 
 
-    def _recorrido_dfs(grafo, vertice, visitados, pila, direccion):
-        if funcion != None: funcion(vertice)
-        for i in devolver_aristas(grafo, vertice, direccion) :
-            if i not in visitados:
-                visitados.add(i)
-                visitados, pila = _recorrido_dfs(i, visitados, pila, direccion)
-                pila.append(i)
+def _recorrido_dfs(grafo, vertice, visitados, pila, direccion):
+    if funcion != None: funcion(vertice)
+    for i in devolver_aristas(grafo, vertice, direccion) :
+        if i not in visitados:
+            visitados.add(i)
+            visitados, pila = _recorrido_dfs(i, visitados, pila, direccion)
+            pila.append(i)
 
-        return visitados, pila
+    return visitados, pila
 
-    def recorrido_dfs(grafo, vertice, direccion):
+def recorrido_dfs(grafo, vertice, direccion):
         
-        visitados = set({})
-        visitados.add(vertice)
-        padres[vertice] = None
-        pila = []
-        return _recorrido_dfs(grafo, vertice, visitados, direccion)
+    visitados = set({})
+    visitados.add(vertice)
+    padres[vertice] = None
+    pila = []
+    return _recorrido_dfs(grafo, vertice, visitados, direccion)
 
 
-    def cfc(grafo):
-        grafo = Grafo()
+def cfc(grafo):
+    grafo = Grafo()
         
-        i = 1
+    i = 1
+    ##Esto habria que repetirlo para los vertices que pueden estar desconectados
+    visitados, pila  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], SALIENTE)
+    visitados = {}
+    while not pila.esta_vacia():
+        vertice = pila.pop(-1)
+        if vertice in visitados: continue
+        visitados, conexos  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], ENTRANTE)
+        print("CFC %d:", )
+        imprimir_lista(conexos)
+        i += 1
 
-
-        ##Esto habria que repetirlo para los vertices que pueden estar desconectados
-        visitados, pila  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], SALIENTE)
-        visitados = {}
-        while not pila.esta_vacia():
-            vertice = pila.pop(-1)
-            if vertice in visitados: continue
-            visitados, conexos  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], ENTRANTE)
-            print("CFC %d:", )
-            imprimir_lista(conexos)
-            i += 1
+print("hice las pruebas")
 
 

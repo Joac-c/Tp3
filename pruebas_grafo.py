@@ -1,4 +1,5 @@
 from grafo import Grafo
+import funciones_grafo
 
 
 def main():
@@ -27,15 +28,17 @@ def main():
     print(grafo.obtener_vertices_entrada("B"))
     print(grafo.obtener_vertices_entrada("D"))
     print(grafo.obtener_vertices_entrada("C"))
-    grafo.sacar_vertice("B")
+    #grafo.sacar_vertice("B")
     print(grafo.obtener_adyacentes("A"))
     print(grafo.obtener_adyacentes("D"))
     print(grafo.obtener_adyacentes("C"))
     print(grafo.obtener_vertices_entrada("A"))
     print(grafo.obtener_vertices_entrada("D"))
     print(grafo.obtener_vertices_entrada("C"))
-    padre, distancia = bfs(grafo, "B")
+    padre, distancia = funciones_grafo.bfs(grafo, "A")
     print(padre)
     print(distancia)
+    print("prueba divulgar")
+    funciones_grafo.divulgar(grafo, "A", 3)
 
 main()
