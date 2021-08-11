@@ -1,6 +1,7 @@
 from grafo import Grafo
-from queue import PriorityQueue
+from grado import Cola
 from random import shuffle
+
 """
     Comando: min_seguimientos.
     Parámetros: origen y destino.
@@ -31,33 +32,31 @@ def _imprimir_camino(padres, destino, origen):
     return
 
 
-def min_seguimientos(grafo, origen, destino):
-    ##uso djstra
-    dist = {}
-    padres = {}
-    heap = PriorityQueue()
-    dist[origen] = 0    
-    padres[origen] = none
-    heap.put((distancia[origen], origen))
-    padres[origen] = none
-
-    while not heap.empty:
-        dv, v = heap_desencolar(heap)
-        for w in grafo.obtener_adyasentes(v):
-            if not w in dist or (dv + 1) < dist[w]):
-                dist[w] = dv + 1
-                heap.put((dist[w], w))
-                padres[w] = v
-    if not destino in padres: print("Seguimiento imposible")
-    _imprimir_camino(padres, destino, origen)
-
-
     
 
+def bfs(grafo, origen):
+	visitados = set()
+	padres = {}
+	orden = {}
+	padres[origen] = None
+	orden[origen] = 0
+	visitados.add(origen)
+	q = Cola()
+	q.encolar(origen)
+	while not q.esta_vacia():
+		v = q.desencolar()
+		for w in grafo.obtener_adyacentes(v):
+			if not w in visitados:
+				padres[w] = v
+				orden[w] = orden[v] + 1
+				visitados.add(w)
+				q.encolar(w)
+	return padres, orden
 
 
-
-
+def min_seguimientos(grafo, origen, destino):
+    padres, orden = bfs(grafo, origen)
+    _imprimir_camino(padres, destino, origen)
 
 
 """
@@ -108,24 +107,8 @@ def pagerank(grafo):
 		_sumatoria(grafo, v, pr)
 	return pr
 
-print(pagerank(grafo))
-
-
 def mas_imp(grafo, cant):
-    grafo = Grafo()
-    vertices = grafo.vertices()
-    ranks = {}
-    
-    for vertice in vertices:
-        ranks[vertice] = [0, 1]
-
-
-    shuffle(vertices)
-    for vertice in vertices:
-        ranks[vertice][0] = ranks[vertice][1]
-        adyasentes = grafo.obtener_adyasentes(vertice)
-        for i in adyasentes:
-            ranks[i] = ranks[i] + ranks[vertice] / len(adyasentes)
+    print(pagerank(grafo))    
 
 
 
@@ -179,14 +162,6 @@ def persecucion():
 
 Tener en cuenta que siendo un archivo generado de forma aleatoria, los resultados obtenibles para este punto tienen muy poco sentido con la realidad.
 """
-
-
-
-
-
-
-
-
 
 def obtener_maximo(diccionario):
     maximo = max(diccionario, key = lambda k: diccionario[k])

@@ -266,64 +266,10 @@ class Grafo:
 		self.n += 1
 		return result
 
-def bfs(grafo, origen):
-	visitados = set()
-	padres = {}
-	orden = {}
-	padres[origen] = None
-	orden[origen] = 0
-	visitados.add(origen)
-	q = Cola()
-	q.encolar(origen)
-	while not q.esta_vacia():
-		v = q.desencolar()
-		for w in grafo.obtener_adyacentes(v):
-			if not w in visitados:
-				padres[w] = v
-				orden[w] = orden[v] + 1
-				visitados.add(w)
-				q.encolar(w)
-	return padres, orden
 
-grafo = Grafo(True)
-grafo.agregar_vertices(["A", "B", "C", "D", "E", "F"])
-aristas = [("A", "B",1), ("A", "C", 5), ("B", "C", 4), ("B", "D", 1), ("D", "C", 2), ("C", "E", 1), ("E", "F", 2), ("D", "F", 3),("E", "D", 1)]
-grafo.agregar_aristas(aristas)
-# print(grafo.obtener_adyacentes("B"))
-# print(grafo.obtener_vertices_entrada("B"))
-# print(grafo.obtener_vertices_entrada("D"))
-# print(grafo.obtener_vertices_entrada("C"))
-# grafo.sacar_vertice("B")
-# print(grafo.obtener_adyacentes("A"))
-# print(grafo.obtener_adyacentes("D"))
-# print(grafo.obtener_adyacentes("C"))
-# print(grafo.obtener_vertices_entrada("A"))
-# print(grafo.obtener_vertices_entrada("D"))
-# print(grafo.obtener_vertices_entrada("C"))
-# padre, distancia = bfs(grafo, "B")
-# print(padre)
-# print(distancia)
 
-def _sumatoria(grafo, vert, pr):
-	suma = 0
-	d = 0.85
-	for v in grafo.obtener_vertices_entrada(vert):
-		if not v in pr:
-			pr[v] = 1 / grafo.cantidad()
-		suma += pr[v] / grafo.obtener_grado_salida(v)
-	pr[vert] += d * suma
 
-def pagerank(grafo):
-	pr = {}
-	d = 0.85
-	formula = (1 - d) / grafo.cantidad()
-	for v in grafo:
-		if not v in pr:
-			pr[v] = formula
-		_sumatoria(grafo, v, pr)
-	return pr
 
-print(pagerank(grafo))
 
 
 
