@@ -146,6 +146,16 @@ def persecucion():
 
 
 
+
+
+
+
+
+
+
+
+
+
 """Para implementar esto, utilizaremos el algoritmo de Label Propagation para detectar comunidades.
 
     Comando: comunidades.
@@ -270,3 +280,95 @@ def divulgar(grafo, delincuente, n):
             
 
     
+
+
+
+"""
+Ciclo de largo n
+
+    Comando: divulgar_ciclo
+    Parámetros: delincuente y n.
+    Utilidad: Permite encontrar un camino simple que empiece y termine en el delincuente pasado por parámetro, de largo n. En caso de no encontrarse un ciclo de ese largo y dicho comienzo, imprimir No se encontro recorrido.
+    Ejemplo:
+    Entrada:
+
+    divulgar_ciclo 74 5
+    divulgar_ciclo 19 11
+
+    Salida:
+
+    74 -> 21 -> 81 -> 18 -> 42 -> 74
+    19 -> 34 -> 12 -> 33 -> 54 -> 28 -> 79 -> 71 -> 57 -> 41 -> 56 -> 19
+
+
+
+"""
+
+
+
+
+
+"""
+Componentes Fuertemente Conexas
+
+    Comando: cfc
+    Parámetros: ninguno.
+    Utilidad: Imprime cada conjunto de vértices entre los cuales todos están conectados con todos.
+    Ejemplo:
+    Entrada:
+
+    cfc
+
+    Salida:
+
+    CFC 1: 10
+    CFC 2: 77, 18, 73, 47, 91, 57, 30, 64, 82, 60, 85, 58, 22, 87, 50, 89, 14, 70, 32,
+"""
+
+ENTRANTE = 1
+SALIENTE = 0
+
+    def devolver_aristas(grafo, vertice, direccion):
+        if ENTRANTE == direccion:
+            return grafo.obtener_vertices_entrada(vertice)
+        if SALIENTE == direccion:
+            return grafo.obtener_adyacentes(v)
+
+
+    def _recorrido_dfs(grafo, vertice, visitados, pila, direccion):
+        if funcion != None: funcion(vertice)
+        for i in devolver_aristas(grafo, vertice, direccion) :
+            if i not in visitados:
+                visitados.add(i)
+                visitados, pila = _recorrido_dfs(i, visitados, pila, direccion)
+                pila.append(i)
+
+        return visitados, pila
+
+    def recorrido_dfs(grafo, vertice, direccion):
+        
+        visitados = set({})
+        visitados.add(vertice)
+        padres[vertice] = None
+        pila = []
+        return _recorrido_dfs(grafo, vertice, visitados, direccion)
+
+
+    def cfc(grafo):
+        grafo = Grafo()
+        
+        i = 1
+
+
+        ##Esto habria que repetirlo para los vertices que pueden estar desconectados
+        visitados, pila  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], SALIENTE)
+        visitados = {}
+        while not pila.esta_vacia():
+            vertice = pila.pop(-1)
+            if vertice in visitados: continue
+            visitados, conexos  = _recorrido_dfs(grafo, grafo.obtener_vertices()[1], ENTRANTE)
+            print("CFC %d:", )
+            imprimir_lista(conexos)
+            i += 1
+
+
