@@ -1,5 +1,5 @@
 from grafo import Grafo
-import funciones_grafo
+import grafo_lib
 
 
 def main():
@@ -35,11 +35,13 @@ def main():
     print(grafo.obtener_vertices_entrada("A"))
     print(grafo.obtener_vertices_entrada("D"))
     print(grafo.obtener_vertices_entrada("C"))
-    padre, distancia = funciones_grafo.bfs(grafo, "A")
+    padre, distancia = grafo_lib.bfs(grafo, "A")
     print(padre)
     print(distancia)
+
+    print(grafo_lib.pagerank(grafo))
     print("prueba divulgar")
-    funciones_grafo.divulgar(grafo, "A", 3)
-    funciones_grafo.comunidades(grafo, 1)
+    k = grafo_lib.label_propagation(grafo)
+    print(k)
 
 main()

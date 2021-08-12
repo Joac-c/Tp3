@@ -259,6 +259,10 @@ class Grafo:
 		self.n = 0
 		return self
 
+	def conectados(self, vertice1, vertice2):
+		if vertice2 in self.vertices[vertice1]: return True
+		return False
+
 	def __next__(self):
 		if self.n >= self.cant:
 			raise StopIteration

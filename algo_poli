@@ -1,0 +1,7 @@
+def _imprimir_camino(padres, destino, origen):
+    if padres[destino] != origen: 
+        _imprimir_camino(padres, padres[destino], origen)
+        print("-> %d", destino)
+    else:
+        print("%d ", destino)
+    return
