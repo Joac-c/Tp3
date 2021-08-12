@@ -9,6 +9,8 @@ def main():
 	leer_archivo(ruta, redes)
 	procesar_entrada(redes, dicc_pgr, lista_pgr)
 
+	
+
 def leer_archivo(ruta, redes):
 	with open(ruta) as archivo:
 		archivo.readline()
@@ -86,17 +88,17 @@ def imprimir_lista(lista):
 	for i in range(0, len(lista) - 1):
 		print("{}, ".format(lista[i]), end='')
 	print(lista[len(lista) - 1])
-	print("\n")
 
 def imprimir_comunidad(numero, lista):
 	print("Comunidad {}: ".format(numero), end='')
 	imprimir_lista(lista)
 
 def imprimir_comunidades(comunidades, n):
-	i = 0
+	i = 1
 	for c in comunidades:
-		if len(comunidades[c]) >= n: imprimir_comunidad(i, comunidades[c]) #aca salta un error de suscripcion de int ???
-		i = i + 1
+		if len(comunidades[c]) >= n:
+			imprimir_comunidad(i, comunidades[c]) #aca salta un error de suscripcion de int ???
+			i = i + 1
 
 def comunidades(grafo, n):
 	comunidades = grafo_lib.label_propagation(grafo)
@@ -140,15 +142,15 @@ def cfc(grafo):
 	##Esto habria que repetirlo para los vertices que pueden estar desconectados
 	while len(antivisitados) != 0:
 		vertice = antivisitados.pop()
-		anti_visitados, pila = grafo_lib._recorrido_dfs(grafo, vertice, antivisitados, pila, SALIENTE)
-	
+		antivisitados, pila = grafo_lib._recorrido_dfs(grafo, vertice, antivisitados, pila, SALIENTE)
 	
 	antivisitados = set(grafo.obtener_vertices())
-	conexos = []
+	
 	while len(pila) != 0:
+		conexos = []
 		vertice = pila.pop(-1)
 		if not vertice in antivisitados: continue
-		antivisitados, conexos  = grafo_lib._recorrido_dfs(grafo, antivisitados.pop(), antivisitados, conexos, ENTRANTE)
+		antivisitados, conexos  = grafo_lib._recorrido_dfs(grafo, vertice, antivisitados, conexos, ENTRANTE)
 		print("CFC {}:".format(i), end='')
 		imprimir_lista(conexos)
 		i += 1

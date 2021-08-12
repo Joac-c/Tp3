@@ -74,21 +74,21 @@ def label_propagation(grafo):
         i += 1
     #iteraciones
     completos = False
-    k = 0
+    #k = 0
     while not completos:
         shuffle(vertices)
         for vertice in vertices:
             e = None
             if grafo.obtener_grado_entrada(vertice) != 0:
                 entradas = grafo.obtener_vertices_entrada(vertice)
-                entradas.append(vertice) 
+                #entradas.append(vertice) 
                 e = obtener_maximo(entradas, etiquetas)
             if e and e != etiquetas[vertice]:
                 completos = False
                 etiquetas[vertice] = e
             else: completos = True
-        k += 1
-        if k == 10: completos = True
+        #k += 1
+        #if k == 10: completos = True
 
     comunidades = {}
     for v in etiquetas:
@@ -110,22 +110,21 @@ def devolver_aristas(grafo, vertice, direccion):
         return grafo.obtener_adyacentes(vertice)
 
 
-def _recorrido_dfs(grafo, vertice, antivisitados, lista_visitados, direccion):
+def _recorrido_dfs(grafo, vertice, faltan_visitar, lista_visitados, direccion):
+    faltan_visitar.discard(vertice)
     for i in devolver_aristas(grafo, vertice, direccion) :
-        if i in antivisitados:
-            antivisitados.discard(i)
-            antivisitados, lista_visitados = _recorrido_dfs(grafo, i, antivisitados, lista_visitados, direccion)
-            lista_visitados.append(i)
-
-    return antivisitados, lista_visitados
+        if i in faltan_visitar:
+            faltan_visitar, lista_visitados = _recorrido_dfs(grafo, i, faltan_visitar, lista_visitados, direccion)
+    lista_visitados.append(vertice)
+    return faltan_visitar, lista_visitados
 
 def recorrido_dfs(grafo, vertice, direccion):
         
     
-    antivisitados = set(grafo.obtener_vertices())
-    antivisitados.discard(vertice)
+    faltan_visitar = set(grafo.obtener_vertices())
+    faltan_visitar.discard(vertice)
     lista_visitados = []
-    return _recorrido_dfs(grafo, vertice, antivisitados, lista_visitados, direccion)
+    return _recorrido_dfs(grafo, vertice, faltan_visitar, lista_visitados, direccion)
 
 
 
