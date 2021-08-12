@@ -1,6 +1,10 @@
 import grafo_lib
+from grafo_lib import pagerank
 from grafo import Grafo
+from grafo import Cola
 import sys
+
+
 def main():
 	redes = Grafo(True)
 	dicc_pgr = {}
@@ -125,6 +129,7 @@ def divulgar(grafo, delincuente, n):
 					visitados.add(i)
 					distancias[i] = distancias[vertice] + 1
 					if distancias[i] < n: cola.encolar(i)
+		visitados.discard(delincuente)
 		imprimir_lista(list(visitados))
 
 
@@ -164,7 +169,7 @@ def procesar_comando(redes, comando, parametros, dicc_pgr, lista_pgr):
 		cant = int(parametros[0])
 		if len(dicc_pgr) == 0:
 			for __ in range(9):
-				dicc_pgr = grafo_lib.PageRank(redes)
+				dicc_pgr = pagerank(redes)
 			for nombre in dicc_pgr:
 				lista_pgr.append((nombre, dicc_pgr[nombre]))
 			lista_pgr.sort(reverse = True) 
@@ -193,6 +198,9 @@ def procesar_comando(redes, comando, parametros, dicc_pgr, lista_pgr):
 		comunidades(redes, n)
 		pass
 	elif comando == "divulgar":
+		delincuente = parametros[0]
+		n = int(parametros[1])
+		divulgar(redes, delincuente, n)
 		pass
 	elif comando == "divulgar_ciclo":
 		pass

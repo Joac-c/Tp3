@@ -1,6 +1,38 @@
 from grafo import Grafo
 import grafo_lib
 
+def imprimir_lista(lista):
+	for i in range(0, len(lista) - 1):
+		print("{}, ".format(lista[i]), end='')
+	print(lista[len(lista) - 1])
+
+def imprimir_comunidad(numero, lista):
+	print("Comunidad {}: ".format(numero), end='')
+	imprimir_lista(lista)
+#cfc
+
+ENTRANTE = 1
+SALIENTE = 0
+
+def cfc(grafo):
+	antivisitados = set(grafo.obtener_vertices())
+	pila = []
+	i = 1
+	##Esto habria que repetirlo para los vertices que pueden estar desconectados
+	while len(antivisitados) != 0:
+		vertice = antivisitados.pop()
+		antivisitados, pila = grafo_lib._recorrido_dfs(grafo, vertice, antivisitados, pila, SALIENTE)
+	
+	antivisitados = set(grafo.obtener_vertices())
+	
+	while len(pila) != 0:
+		conexos = []
+		vertice = pila.pop(-1)
+		if not vertice in antivisitados: continue
+		antivisitados, conexos  = grafo_lib._recorrido_dfs(grafo, vertice, antivisitados, conexos, ENTRANTE)
+		print("CFC {}:".format(i), end='')
+		imprimir_lista(conexos)
+		i += 1
 
 def main():
     """
@@ -39,9 +71,15 @@ def main():
     print(padre)
     print(distancia)
 
-    print(grafo_lib.pagerank(grafo))
+    #print(grafo_lib.pagerank(grafo))
     print("prueba divulgar")
     k = grafo_lib.label_propagation(grafo)
+    
+    grafo = Grafo(True)
+    aristas = [("A", "B",1), ("B", "C", 5), ("C", "A", 4), ("C", "D", 1), ("D", "E", 2), ("E", "F", 1), ("F", "D", 2), ("D", "S", 3),("S", "J", 1)]
+    grafo.agregar_aristas(aristas)
+    cfc(grafo)
+
     print(k)
 
 main()
