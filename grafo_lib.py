@@ -4,13 +4,10 @@ from random import shuffle
 
 
 
-
-
-def bfs(grafo, origen):
+def bfs(grafo, origen, n):
 	visitados = set()
 	padres = {}
 	orden = {}
-	padres[origen] = None
 	orden[origen] = 0
 	visitados.add(origen)
 	q = Cola()
@@ -22,35 +19,33 @@ def bfs(grafo, origen):
 				padres[w] = v
 				orden[w] = orden[v] + 1
 				visitados.add(w)
-				q.encolar(w)
-	return padres, orden
-
+				if n == -1 or orden[w] < n:
+					q.encolar(w)
+	return padres, orden, visitados
 
 
 
 def _sumatoria(grafo, vert, pr):
 	suma = 0
-	d = 0.85
-	for v in grafo.obtener_adyacentes(vert):
+	for v in grafo.obtener_vertices_entrada(vert):
 		if not v in pr:
 			pr[v] = 1 / grafo.cantidad()
-		suma += pr[v] / grafo.obtener_grado_salida(v)
-	pr[vert] += d * suma
+		suma += (pr[v] / grafo.obtener_grado_salida(v))
+	return  suma
 
-def pagerank(grafo):
-	pr = {}
-	d = 0.85
-	formula = (1 - d) / grafo.cantidad()
-	for i in range(0, 11):
-		for v in grafo:
-			if not v in pr:
-				pr[v] = formula
-			_sumatoria(grafo, v, pr)
-	return pr
+def _PageRank(grafo, v,pr, pr_nuevo):
+	pr_nuevo[v] = (1 - 0.85) / grafo.cantidad() + 0.85 * _sumatoria(grafo, v, pr)
+	return pr_nuevo
+
+def PageRank(grafo, pr, pr_nuevo):
+	for v in grafo:
+		if not v in pr_nuevo:
+			pr_nuevo = _PageRank(grafo, v, pr, pr_nuevo)
+	return pr_nuevo
+
 
 
 def obtener_maximo(lista, diccionario):
-	shuffle(lista)
 	etiquetas = {}
 	for x in lista:
 		etiquetas[diccionario[x]] = etiquetas.get(diccionario[x], 0) + 1

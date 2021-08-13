@@ -1,5 +1,6 @@
+#!/usr/bin/python3
 import grafo_lib
-from grafo_lib import pagerank
+from grafo_lib import PageRank
 from grafo import Grafo
 from grafo import Cola
 import sys
@@ -42,7 +43,7 @@ def camino_minimo(redes, origen, destino):
 	if not redes.vertice_pertenece(origen) or not redes.vertice_pertenece(destino):
 		print("Seguimiento imposible")
 		return 
-	padres, __ = bfs(redes, origen)
+	padres, a, b__ = bfs(redes, origen, -1)
 	if not destino in padres:
 		print("Seguimiento imposible")
 		return
@@ -68,21 +69,30 @@ def imprimir_camino(camino):
 	print(result)
 
 def camino_a_mas_importante(redes, delincuentes_encubiertos, delincuentes_importantes):
-	camino_corto = None
+	distancias = {}
 	for delinc in delincuentes_encubiertos:
-		padres, orden = grafo_lib.bfs(redes, delinc)
-		mas_cerca = None
-		for i, imp in enumerate(delincuentes_importantes):
+		padres, orden, v= grafo_lib.bfs(redes, delinc, -1)
+		for imp,i in delincuentes_importantes:
 			if not imp in padres:
 				continue
-			if mas_cerca is None or orden[imp] < orden[mas_cerca]:
-				mas_cerca = imp
-		if mas_cerca is None or orden[mas_cerca] < camino_corto[1]:
-			camino_corto = (reconstruir_camino(padres, mas_cerca), orden[mas_cerca])
+			if not imp in distancias:
+				distancias[imp] = (reconstruir_camino(padres, imp), orden[imp],i)
+			if distancias[imp][1] > orden[imp]:
+				distancias[imp] = (reconstruir_camino(padres, imp), orden[imp], i)
+	camino_corto = None
+	distancia = None
+	importancia = None
+	for camino, dist, nivel_imp in distancias.values():
+		if camino_corto == None:
+			camino_corto, distancia, importancia = camino, dist, nivel_imp
 			continue
-	if camino_corto is None :
-		return
-	imprimir_camino(camino_corto[0])
+		if dist < distancia:
+			camino_corto, distancia, importancia = camino, dist, nivel_imp
+			continue
+		if dist == distancia:
+			if nivel_imp > importancia:
+				camino_corto, distancia, importancia = camino, dist, nivel_imp
+	imprimir_camino(camino_corto)
 
 
 #Comunidades
@@ -116,25 +126,24 @@ def comunidades(grafo, n):
 #Para esta funcion hay que ver como reutilizar el bfs usado en min_seguimientos
 
 def divulgar(grafo, delincuente, n):
-		cola = Cola()
-		visitados = set({})
-		distancias = {}
-		visitados.add(delincuente)
-		distancias[delincuente] = 0
-		cola.encolar(delincuente)
-
-		while not cola.esta_vacia():
-			vertice = cola.desencolar()
-			for i in grafo.obtener_adyacentes(vertice):
-				if not i in visitados:
-					visitados.add(i)
-					distancias[i] = distancias[vertice] + 1
-					if distancias[i] < n: cola.encolar(i)
-		visitados.discard(delincuente)
-		imprimir_lista(list(visitados))
+	a, b, visitados = grafo_lib.bfs(grafo, delincuente, n)
+	visitados.discard(delincuente)
+	imprimir_lista(list(visitados))
 
 
+## divulgacion de Ciclo
 
+def condicion(vertice, distancias, extra):
+	if extra[0] == vertice and distancias[vertice] == extra[1] : return True
+	elif distancias[vertice] < extra[1]: return -1
+	else: return False
+
+
+def divulgar_ciclo(redes, delincuente, n):
+	extra = (delincuente, n)
+	visitados, camino, exito = grafo_lib.backtraking(redes, delincuente, condicion, extra)
+	if not exito: print("No se encontro recorrido")
+	else: imprimir_camino(camino)
 
 #cfc
 
@@ -160,25 +169,6 @@ def cfc(grafo):
 		print("CFC {}:".format(i), end='')
 		imprimir_lista(conexos)
 		i += 1
-
-
-
-
-## divulgacion de Ciclo
-
-def condicion(vertice, distancias, extra):
-	if extra[0] == vertice and distancias[vertice] == extra[1] : return True
-	elif distancias[vertice] < extra[1]: return -1
-	else: return False
-
-
-def divulgar_ciclo(redes, delincuente, n):
-	extra = (delincuente, n)
-	visitados, camino, exito = grafo_lib.backtraking(redes, delincuente, condicion, extra)
-	if not exito: print("No se encontro recorrido")
-	else: imprimir_camino(camino)
-
-
 
 ## Procesar Comando
 
