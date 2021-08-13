@@ -1,5 +1,5 @@
 from grafo import Grafo
-from grafo import Cola
+from cola import Cola
 from random import shuffle
 
 
@@ -72,7 +72,7 @@ def label_propagation(grafo):
 	#iteraciones
 
 	completos = False
-
+	#k = 0
 	while not completos:
 		# En 6 iteraciones deberia completarse el 95%
 		completos = True
@@ -86,6 +86,8 @@ def label_propagation(grafo):
 			if e and e != etiquetas[vertice]:
 				completos = False
 				etiquetas[vertice] = e
+		#k+= 1
+		#if k == 10: completos = True
 	
 
 	comunidades = {}
@@ -116,6 +118,25 @@ def _recorrido_dfs(grafo, vertice, faltan_visitar, lista_visitados, direccion):
 	lista_visitados.append(vertice)
 	return faltan_visitar, lista_visitados
 
+def dfs_iterativo(grafo, vertice, faltan_visitar, lista_visitados, direccion):
+	pila = []
+	faltan_visitar = set(grafo.obtener_vertices())
+	faltan_visitar.discard(vertice)
+	pila.append(vertice)
+	lista_visitados = []
+
+	while len(pila) != 0:
+		vertice = pila.pop()
+		
+		if vertice in faltan_visitar:
+			faltan_visitar.discard(vertice)
+			lista_visitados.append(vertice)
+			for i in devolver_aristas(grafo, vertice, direccion):
+				if i in faltan_visitar:	
+					pila.append(i)
+	return faltan_visitar, lista_visitados
+
+
 def recorrido_dfs(grafo, vertice, direccion):	
 	faltan_visitar = set(grafo.obtener_vertices())
 	faltan_visitar.discard(vertice)
@@ -130,11 +151,11 @@ CONDICION_RECURSION = -1
 
 def _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias):
 	camino.append(vertice)
-	condicion = condicion(vertice, distancias, extra)
-	if condicion == CONDICION_EXITO:
+	cond = condicion(vertice, distancias, extra)
+	if cond == CONDICION_EXITO:
 		return visitados, camino, True
 	
-	elif condicion == CONDICION_RECURSION:
+	elif cond == CONDICION_RECURSION:
 		for i in devolver_aristas(grafo, vertice, SALIENTE):
 			if not i in visitados:
 				visitados.add(i)

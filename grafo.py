@@ -1,65 +1,3 @@
-from queue import Queue
-
-
-import random
-class Cola:
-	def __init__(self):
-		self.items = []
-		self.cant = 0
-
-	def esta_vacia(self):
-		return self.cant == 0
-
-	def encolar(self, x):
-		self.items.append(x)
-		self.cant += 1
-
-	def desencolar(self):
-		if self.esta_vacia():
-			raise IndexError("L cola esta vacia.")
-		self.cant -= 1
-		return self.items.pop(0)
-
-# class Heap:
-# 	def __init__(self, comp):
-# 		self.datos = []
-# 		self.cant = 0
-# 		self.cmp = comp
-# 	def posicion_padre(self, pos_hijo):
-# 		return (pos_hijo -1)/2
-
-# 	def posicion_hijo(self, pos_padre):
-# 		return (2 * pos_padre + 1, 2 * pos_padre + 2)
-
-# 	def swap(self, x, y):
-# 		aux = self.datos[x]
-# 		self.datos[x] = self.datos[y]
-# 		self.datos[y] = aux
-
-# 	def encolar(self, elem):
-# 		self.datos[self.cant] = elem
-# 		pos_act = self.cant
-# 		pos_padre = self.posicion_padre(pos_act)
-# 		while (pos_padre > 0):
-# 			if self.cmp == False and self.datos[pos_act] > self.datos[pos_padre]:
-# 				self.swap(pos_act, pos_padre)
-# 				pos_act = pos_padre
-# 				pos_padre = self.posicion_padre(pos_act)
-# 				continue
-# 			if self.cmp == True and self.datos[pos_act][2] > self.datos[pos_padre][2]:
-# 				self.swap(pos_act, pos_padre)
-# 				pos_act = pos_padre
-# 				pos_padre = self.posicion_padre(pos_act)
-# 				continue
-# 			break
-# 		self.cant += 1
-
-# 	def dowheap(self, )
-
-# 	def desencolar(self):
-# 		if 
-
-
 class Grafo:
 	def __init__(self, dirigido = False):
 		self.vertices = {}
@@ -69,6 +7,7 @@ class Grafo:
 		self.grado_salida = {}
 		self.grado_entrada = {}
 		self.dirigido = dirigido
+
 	def agregar_vertice(self, vertice):
 		if vertice in self.vertices:
 			return
@@ -99,6 +38,9 @@ class Grafo:
 	def pertenece(self, vertice):
 		return vertice in self.vertices
 
+	def conectados(self, vertice1, vertice2):
+		return vertice2 in self.vertices[vertice1]
+
 	def cantidad(self):
 		return self.cant
 
@@ -127,6 +69,8 @@ class Grafo:
 			self.agregar_vertice(vertice1)
 		if not vertice2 in self.vertices:
 			self.agregar_vertice(vertice2)
+		if vertice1 == vertice2:
+			return
 		if not self.dirigido:
 			self.adyacentes[vertice2].append(vertice1)
 			self.grado_entrada[vertice1] += 1
@@ -182,10 +126,6 @@ class Grafo:
 		self.n = 0
 		return self
 
-	def conectados(self, vertice1, vertice2):
-		if vertice2 in self.vertices[vertice1]: return True
-		return False
-
 	def __next__(self):
 		if self.n >= self.cant:
 			raise StopIteration
@@ -194,23 +134,3 @@ class Grafo:
 		return result
 
 
-
-
-
-
-
-
-    
-
-
-
-
-
-        
-
-
-
-
-            
-            
-    
