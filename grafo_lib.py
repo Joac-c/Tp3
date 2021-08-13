@@ -50,6 +50,7 @@ def pagerank(grafo):
 
 
 def obtener_maximo(lista, diccionario):
+	shuffle(lista)
 	etiquetas = {}
 	for x in lista:
 		etiquetas[diccionario[x]] = etiquetas.get(diccionario[x], 0) + 1
@@ -73,24 +74,22 @@ def label_propagation(grafo):
 		#para los vertices vamos a armar una lista
 		etiquetas[v] = i
 		i += 1
+	
 	#iteraciones
-
 	completos = False
-	#k = 0
 	while not completos:
+		# En 6 iteraciones deberia completarse el  95%
+		completos = True
 		shuffle(vertices)
 		for vertice in vertices:
 			e = None
 			if grafo.obtener_grado_entrada(vertice) != 0:
 				entradas = grafo.obtener_vertices_entrada(vertice)
-				#entradas.append(vertice) 
 				e = obtener_maximo(entradas, etiquetas)
 			if e and e != etiquetas[vertice]:
 				completos = False
 				etiquetas[vertice] = e
-			else: completos = True
-		#k += 1
-		#if k == 10: completos = True
+	
 
 	comunidades = {}
 	for v in etiquetas:
