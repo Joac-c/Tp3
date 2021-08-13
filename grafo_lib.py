@@ -74,17 +74,19 @@ def label_propagation(grafo):
 		#para los vertices vamos a armar una lista
 		etiquetas[v] = i
 		i += 1
-	
 	#iteraciones
+
 	completos = False
+
 	while not completos:
-		# En 6 iteraciones deberia completarse el  95%
+		# En 6 iteraciones deberia completarse el 95%
 		completos = True
 		shuffle(vertices)
 		for vertice in vertices:
 			e = None
 			if grafo.obtener_grado_entrada(vertice) != 0:
 				entradas = grafo.obtener_vertices_entrada(vertice)
+				entradas.append(vertice)
 				e = obtener_maximo(entradas, etiquetas)
 			if e and e != etiquetas[vertice]:
 				completos = False
@@ -127,17 +129,18 @@ def recorrido_dfs(grafo, vertice, direccion):
 
 
 
+CONDICION_EXITO = 1
+CONDICION_RECURSION = -1
 
 
 def _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias):
 	camino.append(vertice)
-	if condicion(vertice, distancias, extra) == True:
+	condicion = condicion(vertice, distancias, extra)
+	if condicion == CONDICION_EXITO:
 		return visitados, camino, True
-	exito = False
-	if distancias[vertice] < extra[1]:
+	if condicion == CONDICION_RECURSION:
 		for i in devolver_aristas(grafo, vertice, SALIENTE):
 			if not i in visitados:
-				#aca el problema es que si llega al vertice no entra
 				visitados.add(i)
 				distancias[i] = distancias[vertice] + 1 #se podria poner una condicion para que no avance de mas
 				x, camino, exito =  _backtraking(grafo, i, condicion, extra, visitados, camino, distancias)

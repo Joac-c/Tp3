@@ -168,6 +168,7 @@ def cfc(grafo):
 
 def condicion(vertice, distancias, extra):
 	if extra[0] == vertice and distancias[vertice] == extra[1] : return True
+	elif distancias[vertice] < extra[1]: return -1
 	else: return False
 
 
