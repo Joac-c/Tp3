@@ -138,11 +138,12 @@ def _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias
 	condicion = condicion(vertice, distancias, extra)
 	if condicion == CONDICION_EXITO:
 		return visitados, camino, True
-	if condicion == CONDICION_RECURSION:
+	
+	elif condicion == CONDICION_RECURSION:
 		for i in devolver_aristas(grafo, vertice, SALIENTE):
 			if not i in visitados:
 				visitados.add(i)
-				distancias[i] = distancias[vertice] + 1 #se podria poner una condicion para que no avance de mas
+				distancias[i] = distancias[vertice] + 1 
 				x, camino, exito =  _backtraking(grafo, i, condicion, extra, visitados, camino, distancias)
 				if exito == True: return visitados, camino, exito
 				else:
