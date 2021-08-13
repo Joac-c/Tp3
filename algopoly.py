@@ -11,6 +11,7 @@ def main():
 	lista_pgr = []
 	ruta = "/home/joa/codigo/C/tp3/minimo.tsv"
 	leer_archivo(ruta, redes)
+	pruebas = []
 	procesar_entrada(redes, dicc_pgr, lista_pgr)
 
 	
@@ -160,6 +161,27 @@ def cfc(grafo):
 		imprimir_lista(conexos)
 		i += 1
 
+
+
+
+## divulgacion de Ciclo
+
+def condicion(vertice, distancias, extra):
+	if extra[0] == vertice and distancias[vertice] == extra[1] : return True
+	else: return False
+
+
+def divulgar_ciclo(redes, delincuente, n):
+	extra = (delincuente, n)
+	visitados, camino, exito = grafo_lib.backtraking(redes, delincuente, condicion, extra)
+	if not exito: print("No se encontro recorrido")
+	else: imprimir_camino(camino)
+
+
+
+## Procesar Comando
+
+
 def procesar_comando(redes, comando, parametros, dicc_pgr, lista_pgr):
 	if comando == "min_seguimientos":
 		origen, destino = parametros[0], parametros[1]
@@ -203,6 +225,9 @@ def procesar_comando(redes, comando, parametros, dicc_pgr, lista_pgr):
 		divulgar(redes, delincuente, n)
 		pass
 	elif comando == "divulgar_ciclo":
+		delincuente = parametros[0]
+		n = int(parametros[1])
+		divulgar_ciclo(redes, delincuente, n)
 		pass
 	elif comando == "cfc":
 		cfc(redes)

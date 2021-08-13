@@ -74,6 +74,7 @@ def label_propagation(grafo):
 		etiquetas[v] = i
 		i += 1
 	#iteraciones
+
 	completos = False
 	#k = 0
 	while not completos:
@@ -119,13 +120,47 @@ def _recorrido_dfs(grafo, vertice, faltan_visitar, lista_visitados, direccion):
 	lista_visitados.append(vertice)
 	return faltan_visitar, lista_visitados
 
-def recorrido_dfs(grafo, vertice, direccion):
-		
-	
+def recorrido_dfs(grafo, vertice, direccion):	
 	faltan_visitar = set(grafo.obtener_vertices())
 	faltan_visitar.discard(vertice)
 	lista_visitados = []
 	return _recorrido_dfs(grafo, vertice, faltan_visitar, lista_visitados, direccion)
+
+
+
+
+
+def _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias):
+	camino.append(vertice)
+	if condicion(vertice, distancias, extra) == True:
+		return visitados, camino, True
+	exito = False
+	if distancias[vertice] < extra[1]:
+		for i in devolver_aristas(grafo, vertice, ENTRANTE):
+			if not i in visitados:
+				#aca el problema es que si llega al vertice no entra
+				visitados.add(i)
+				distancias[i] = distancias[vertice] + 1 #se podria poner una condicion para que no avance de mas
+				x, camino, exito =  _backtraking(grafo, i, condicion, extra, visitados, camino, distancias)
+				if exito == True: return visitados, camino, exito
+				else:
+					camino.pop(-1)
+	visitados.discard(vertice)
+	return visitados, camino, False
+
+
+
+def backtraking(grafo, vertice, condicion, extra):
+	visitados = set({})
+	camino = []
+	distancias = {}
+	distancias[vertice] = 0
+	return _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias)
+
+
+
+
+
 
 
 
