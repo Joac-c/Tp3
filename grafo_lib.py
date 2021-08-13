@@ -136,7 +136,7 @@ def _backtraking(grafo, vertice, condicion, extra, visitados, camino, distancias
 		return visitados, camino, True
 	exito = False
 	if distancias[vertice] < extra[1]:
-		for i in devolver_aristas(grafo, vertice, ENTRANTE):
+		for i in devolver_aristas(grafo, vertice, SALIENTE):
 			if not i in visitados:
 				#aca el problema es que si llega al vertice no entra
 				visitados.add(i)
